@@ -1,0 +1,76 @@
+import numpy as np
+
+def input_vertices(): #Функция для ввода количества вершин и рёбер графа
+    num_vertices = int(input("Введите количество вершин: "))
+    edges = []
+
+    print("Введите пары вершин через пробел для каждого ребра (или 'к' для завершения ввода):")
+    while True:
+        edge_input = input()
+        if edge_input.lower() == "к":
+            break
+        edge = list(map(int, edge_input.split()))
+        if len(edge) != 2 or not (1 <= edge[0] <= num_vertices) or not (1 <= edge[1] <= num_vertices):
+            print("Некорректный ввод, введите пару вершин в правильном формате")
+            continue
+        edges.append(edge)
+    return num_vertices, edges
+
+
+def is_oriented_graph(): #Функция для определения типа графа
+    choice = int(input("Выберите тип графа (1 - ориентированный, 2 - неориентированный): "))
+    return choice == 1
+
+def adjacency_matrix(num_vertices, edges, oriented): #Функция для создания матрицы смежности
+    adj_matrix = np.zeros((num_vertices, num_vertices), dtype=int)
+
+    for edge in edges:
+        a, b = edge
+        adj_matrix[a-1][b-1] = 1
+        if not oriented:
+            adj_matrix[b-1][a-1] = 1
+
+    return adj_matrix
+
+def adjacency_list(edges): #Функция для создания списка смежности
+    adj_list = {}
+
+    for a, b in edges:
+        if a in adj_list:
+            adj_list[a].append(b)
+        else:
+            adj_list[a] = [b]
+
+    return adj_list
+
+def incidence_matrix(num_vertices, edges, oriented): #Функция для создания матрицы инцидентности
+    num_edges = len(edges)
+    inc_matrix = np.zeros((num_vertices, num_edges), dtype=int)
+
+    for i, edge in enumerate(edges):
+        a, b = edge
+        if oriented:
+            inc_matrix[a-1][i] = 1
+            inc_matrix[b-1][i] = -1
+        else:
+            inc_matrix[a-1][i] = 1
+            inc_matrix[b-1][i] = 1
+    return inc_matrix
+
+num_vertices, edges = input_vertices()
+oriented = is_oriented_graph()
+
+adjacency_matrix_result = adjacency_matrix(num_vertices, edges, oriented)
+adjacency_list_result = adjacency_list(edges)
+incidence_matrix_result = incidence_matrix(num_vertices, edges, oriented)
+
+print("Список смежности:")
+for vertex in adjacency_list_result:
+    neighbors = adjacency_list_result[vertex]
+    print(f"V{vertex}: {neighbors}")
+
+print("Матрица смежности:")
+print(adjacency_matrix_result)
+
+print("Матрица инцидентности:")
+print(incidence_matrix_result)
