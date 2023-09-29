@@ -66,7 +66,7 @@ adjacency_list_result = adjacency_list(edges)
 incidence_matrix_result = incidence_matrix(num_vertices, edges, oriented)
 
 print("Список смежности:")
-for vertex in adjacency_list_result:
+for vertex in sorted(adjacency_list_result.keys()):
     neighbors = adjacency_list_result[vertex]
     print(f"V{vertex}: {neighbors}")
 
