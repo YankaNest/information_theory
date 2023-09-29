@@ -32,7 +32,7 @@ def adjacency_matrix(num_vertices, edges, oriented): #Функция для со
 
     return adj_matrix
 
-def adjacency_list(edges): #Функция для создания списка смежности
+def adjacency_list(edges, oriented): #Функция для создания списка смежности
     adj_list = {}
 
     for a, b in edges:
@@ -40,6 +40,12 @@ def adjacency_list(edges): #Функция для создания списка 
             adj_list[a].append(b)
         else:
             adj_list[a] = [b]
+
+        if not oriented: 
+            if b in adj_list:
+                adj_list[b].append(a)
+            else:
+                adj_list[b] = [a]
 
     return adj_list
 
@@ -61,7 +67,7 @@ num_vertices, edges = input_vertices()
 oriented = is_oriented_graph()
 
 adjacency_matrix_result = adjacency_matrix(num_vertices, edges, oriented)
-adjacency_list_result = adjacency_list(edges)
+adjacency_list_result = adjacency_list(edges, oriented)
 incidence_matrix_result = incidence_matrix(num_vertices, edges, oriented)
 
 print("Список смежности:")
